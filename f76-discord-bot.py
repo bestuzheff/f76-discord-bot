@@ -10,6 +10,16 @@ if not bot_id:
     exit("Error: no bot id provided")
 
 
+# Функция убирает из строки пользователя лишние символы и преобразует в число
+def get_user_id_from_string(users_string):
+    users_string = users_string.removeprefix("<@")
+    users_string = users_string.removesuffix(">")
+    if users_string.isdigit():
+        return int(users_string)
+    else:
+        return 0
+
+
 class MyClient(discord.Client):
 
     async def on_ready(self):
@@ -38,9 +48,10 @@ class MyClient(discord.Client):
             await message.channel.send(embed=emb)
 
         if message.content.startswith("+karma"):
-            # user_id = message.content.removeprefix("+karma ")
-            # user = await discord.fetch_user('<user id>')
-            await message.channel.send('Увеличение кармы!')
+            user_id_string = message.content.removeprefix("+karma ")
+            user_id = get_user_id_from_string(user_id_string)
+            user = await client.fetch_user(user_id)
+            await message.channel.send(user)
 
         if message.content.startswith("-karma"):
             await message.channel.send('Уменьшение кармы!')
