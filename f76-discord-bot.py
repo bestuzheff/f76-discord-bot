@@ -5,6 +5,7 @@ bot_token = os.getenv("TOKEN")
 if not bot_token:
     exit("Error: no token provided")
 
+
 # bot_id = os.getenv("BOT_ID")
 # if not bot_id:
 #     exit("Error: no bot id provided")
