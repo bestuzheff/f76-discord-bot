@@ -1,20 +1,17 @@
-import discord
-import requests
 from os import getenv
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
+import discord
+import requests
 
 load_dotenv()
 
 bot_token = getenv("BOT_TOKEN")
 
-
-
 intents = discord.Intents.default()
 # intents.message_content = True
 
 client = discord.Client(intents=intents)
-
 
 @client.event
 async def on_ready():
@@ -49,10 +46,10 @@ def get_nuka_codes():
         soup = BeautifulSoup(response.text, "html.parser")
         nuclearcodess = soup.find("div", {"id": "nuclearcodess"})
         quotes = nuclearcodess.find_all("td")
-        for nucaCode in quotes:
-            nucaCodeText = nucaCode.text
-            if nucaCodeText.isdigit():
-                codes.append(nucaCodeText)
+        for nuca_code in quotes:
+            nuca_сode_text = nuca_code.text
+            if nuca_сode_text.isdigit():
+                codes.append(nuca_сode_text)
     return codes
     
 
