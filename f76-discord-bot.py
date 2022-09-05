@@ -9,7 +9,7 @@ load_dotenv()
 bot_token = getenv("BOT_TOKEN")
 
 intents = discord.Intents.default()
-# intents.message_content = True
+intents.message_content = True
 
 client = discord.Client(intents=intents)
 
