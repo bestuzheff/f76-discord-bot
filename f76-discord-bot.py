@@ -1,15 +1,19 @@
-import os
 import discord
+import requests
+from os import getenv
+from bs4 import BeautifulSoup
+from dotenv import load_dotenv
 
-bot_token = os.getenv("TOKEN")
-if not bot_token:
-    exit("Error: no token provided")
+load_dotenv()
 
-# bot_id = os.getenv("BOT_ID")
-# if not bot_id:
-#     exit("Error: no bot id provided")
+bot_token = getenv("BOT_TOKEN")
 
-client = discord.Client()
+
+
+intents = discord.Intents.default()
+# intents.message_content = True
+
+client = discord.Client(intents=intents)
 
 
 @client.event
@@ -24,42 +28,32 @@ async def on_message(message):
         return
 
     # Вывод справки
-    if message.content == '!h' or message.content == '!help':
-        emb = discord.Embed(title="🪧 СПРАВКА ПО КОМАНДАМ")
-        # Карма
-        emb.add_field(name=">> КАРМА", value="Рейтинг пользователей", inline=False)
-        emb.add_field(name="Увеличение кармы:", value="+karma @пользователь", inline=True)
-        emb.add_field(name='Уменьшение кармы:', value="-karma @пользователь", inline=True)
-        emb.add_field(name="Узнать карму:", value="!karma @пользователь", inline=True)
-
-        # Коды запуска
-        # emb.add_field(name=">> КОДЫ", value="Коды запуска ядерных ракет", inline=False)
-        # emb.add_field(name="!k", value="Вывести коды запуска на эту неделю", inline=False)
-
-        emb.set_footer(text="☢ Fallout 76 | Our Future Begins ☢")
+    if message.content == '!к' or message.content == '!k':
+        # Получим коды запуска ракет
+        codes = get_nuka_codes()
+        if len(codes) == 3:
+            emb = discord.Embed(title='☢ Коды запуска ракет ☢', color=discord.Colour.dark_orange())
+            emb.add_field(name='Альфа:', value=codes[0], inline=True)
+            emb.add_field(name='Браво:', value=codes[1], inline=True)
+            emb.add_field(name='Чарли:', value=codes[2], inline=True)
+            emb.set_footer(text='По вопросам работы бота писать @bestuzheff#3788')
+        else:
+            emb = discord.Embed(title="Получить коды запуска ракет не удалось!")
         await message.channel.send(embed=emb)
 
-    if message.content.startswith("+karma"):
-        await message.channel.send('Увеличение кармы!')
-        # user_id_string = message.content.removeprefix("+karma ")
-        # user_id = get_user_id_from_string(user_id_string)
-        # user = await client.fetch_user(user_id)
-        # await message.channel.send(user)
 
-    if message.content.startswith("-karma"):
-        await message.channel.send('Уменьшение кармы!')
-
-    if message.content.startswith("!karma"):
-        await message.channel.send('Проверка кармы!')
+def get_nuka_codes():
+    codes = []
+    response = requests.get("https://nukacrypt.com/", timeout=15)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.text, "html.parser")
+        nuclearcodess = soup.find("div", {"id": "nuclearcodess"})
+        quotes = nuclearcodess.find_all("td")
+        for nucaCode in quotes:
+            nucaCodeText = nucaCode.text
+            if nucaCodeText.isdigit():
+                codes.append(nucaCodeText)
+    return codes
+    
 
 client.run(bot_token)
-
-
-# Функция убирает из строки пользователя лишние символы и преобразует в число
-def get_user_id_from_string(users_string):
-    users_string = users_string.removeprefix("<@")
-    users_string = users_string.removesuffix(">")
-    if users_string.isdigit():
-        return int(users_string)
-    else:
-        return 0
