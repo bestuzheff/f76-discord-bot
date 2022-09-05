@@ -7,6 +7,8 @@ import requests
 load_dotenv()
 
 bot_token = getenv("BOT_TOKEN")
+if not bot_token:
+    exit("Error: no token provided")
 
 intents = discord.Intents.default()
 intents.message_content = True
