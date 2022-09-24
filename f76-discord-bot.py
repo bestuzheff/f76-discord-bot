@@ -88,7 +88,9 @@ async def on_message(message):
 
 def get_nuka_codes():
     codes = []
-    response = requests.get("https://nukacrypt.com/", timeout=15)
+
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:55.0) Gecko/20100101 Firefox/55.0',}
+    response = requests.get("https://nukacrypt.com", timeout=15, headers=headers)
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, "html.parser")
         nuclearcodess = soup.find("div", {"id": "nuclearcodess"})
