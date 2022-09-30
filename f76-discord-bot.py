@@ -29,7 +29,7 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    desc = f"На сервере у {message.author}"
+    desc = f"На сервере у {message.author.display_name}"
 
     # справка
     if message.content == '!h' or message.content == '!help':
