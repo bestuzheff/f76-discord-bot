@@ -12,6 +12,7 @@ if not bot_token:
 
 intents = discord.Intents.default()
 intents.message_content = True
+intents.members =True
 
 client = discord.Client(intents=intents)
 
@@ -45,7 +46,7 @@ async def on_message(message):
         await message.channel.send(embed=emb)
 
     # Вывод кодов запуска ракет
-    if message.content == '!к' or message.content == '!k':
+    if message.content == '!к' or message.content == '!c':
         # Получим коды запуска ракет
         codes = get_nuka_codes()
         if len(codes) == 3:
@@ -58,8 +59,8 @@ async def on_message(message):
             emb = discord.Embed(title="Получить коды запуска ракет не удалось!")
         await message.channel.send(embed=emb)
 
-    # События
-    # Матка
+    # Game events
+    # Scorched Earth
     if message.content.startswith('!м'):
         emb = discord.Embed(title='СОБЫТИЕ ГОРЕЛАЯ ЗЕМЛЯ', description=desc, color=0x7289da)
         emb.set_thumbnail(url="https://bestuzheff.github.io/images/f76_Scorched_quest.webp")
@@ -68,7 +69,7 @@ async def on_message(message):
             emb.add_field(name='Примечание', value=note, inline=False)
         await message.channel.send(embed=emb)
 
-    # Эрл
+    # A Colossal Problem
     if message.content.startswith('!э'):
         emb = discord.Embed(title='СОБЫТИЕ КОЛОССАЛЬНАЯ ПРОБЛЕМА', description=desc, color=0x7289da)
         emb.set_thumbnail(url="https://bestuzheff.github.io/images/f76_wst_colossus.webp")
@@ -77,7 +78,7 @@ async def on_message(message):
             emb.add_field(name='Примечание', value=note, inline=False)
         await message.channel.send(embed=emb)
 
-    # Баран
+    # Encryptid
     if message.content.startswith('!б'):
         emb = discord.Embed(title='СОБЫТИЕ КРИПТИДОГРАФИЯ', description=desc, color=0x7289da)
         emb.set_thumbnail(url="https://bestuzheff.github.io/images/f76_cryptide.png")
@@ -85,6 +86,26 @@ async def on_message(message):
         if note != '':
             emb.add_field(name='Примечание', value=note, inline=False)
         await message.channel.send(embed=emb)
+
+    # Karma
+    # Add karma
+    if message.content.startswith('+karma') or message.content.startswith('+k'):
+        user_id = get_user_id(message.content)
+        user_name = client.get_user(int(user_id)).display_name
+        pass
+
+
+    # Remove karma
+    if message.content.startswith('-karma') or message.content.startswith('-k'):
+        user_id = get_user_id(message.content)
+        user_name = client.get_user(int(user_id))
+        pass
+
+    # Check karma
+    if message.content.startswith('!karma') or message.content.startswith('!k'):
+        user_id = get_user_id(message.content)
+        user_name = client.get_user(int(user_id)).display_name        
+        pass
 
 
 def get_nuka_codes():
@@ -107,5 +128,13 @@ def get_note(message):
     note = message[2:].strip()
     return note
 
+
+def get_user_id(message):
+    user_id = ''
+    start_id_place = message.find("<")
+    end_id_place = message.find(">")
+    if start_id_place > 0 and end_id_place > 0:
+        user_id = message[start_id_place+2:end_id_place:]
+    return user_id
 
 client.run(bot_token)
