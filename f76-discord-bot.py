@@ -33,20 +33,21 @@ async def on_message(message):
     desc = f"На сервере у {message.author.display_name}"
 
     # справка
-    if message.content == '!h' or message.content == '!help':
+    if message.content == '!с' or message.content == '!help':
         emb = discord.Embed(title='СПРАВКА', color=discord.Colour.dark_orange())
         emb.set_thumbnail(url="https://bestuzheff.github.io/images/f76_nuca_cola.webp")        
         emb.add_field(name='Команды бота:', value="""
-        **!h** - справка по боту 
+        **!с** - справка по боту 
         **!к** - коды запуска ракет 
         **!м** - событие Горелая земля
         **!э** - событие Колоссальная проблема
+        **!т** - событие Сейсмическая активность
         **!б** - событие Криптидография\n""", inline=False)
         emb.set_footer(text='По вопросам работы бота писать @bestuzheff#3788')
         await message.channel.send(embed=emb)
 
     # Вывод кодов запуска ракет
-    if message.content == '!к' or message.content == '!c':
+    if message.content == '!к':
         # Получим коды запуска ракет
         codes = get_nuka_codes()
         if len(codes) == 3:
@@ -81,7 +82,16 @@ async def on_message(message):
     # Encryptid
     if message.content.startswith('!б'):
         emb = discord.Embed(title='СОБЫТИЕ КРИПТИДОГРАФИЯ', description=desc, color=0x7289da)
-        emb.set_thumbnail(url="https://bestuzheff.github.io/images/f76_cryptide.png")
+        emb.set_thumbnail(url="https://bestuzheff.github.io/images/f76_encryptid.webp")
+        note = get_note(message.content)
+        if note != '':
+            emb.add_field(name='Примечание', value=note, inline=False)
+        await message.channel.send(embed=emb)
+
+    # Seismic Activity
+    if message.content.startswith('!т'):
+        emb = discord.Embed(title='СОБЫТИЕ СЕЙСМИЧЕСКАЯ АКТИВНОСТЬ', description=desc, color=0x7289da)
+        emb.set_thumbnail(url="https://bestuzheff.github.io/images/f76_seismic_activity.webp")
         note = get_note(message.content)
         if note != '':
             emb.add_field(name='Примечание', value=note, inline=False)
@@ -90,27 +100,26 @@ async def on_message(message):
     # Karma
     # Add karma
     if message.content.startswith('+karma') or message.content.startswith('+k'):
-        user_id = get_user_id(message.content)
-        user_name = client.get_user(int(user_id)).display_name
+        # user_id = get_user_id(message.content)
+        # user_name = client.get_user(int(user_id)).display_name
         pass
 
 
     # Remove karma
     if message.content.startswith('-karma') or message.content.startswith('-k'):
-        user_id = get_user_id(message.content)
-        user_name = client.get_user(int(user_id))
+        # user_id = get_user_id(message.content)
+        # user_name = client.get_user(int(user_id))
         pass
 
     # Check karma
     if message.content.startswith('!karma') or message.content.startswith('!k'):
-        user_id = get_user_id(message.content)
-        user_name = client.get_user(int(user_id)).display_name        
+        # user_id = get_user_id(message.content)
+        # user_name = client.get_user(int(user_id)).display_name        
         pass
 
 
 def get_nuka_codes():
     codes = []
-
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:55.0) Gecko/20100101 Firefox/55.0', }
     response = requests.get("https://nukacrypt.com", timeout=15, headers=headers)
     if response.status_code == 200:
