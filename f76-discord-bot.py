@@ -12,13 +12,15 @@ if not bot_token:
 
 intents = discord.Intents.default()
 intents.message_content = True
+intents.members =True
 
 client = discord.Client(intents=intents)
+
 
 @client.event
 async def on_ready():
     activity = discord.Activity(type=discord.ActivityType.watching, name="!help")
-    await client.change_presence(status=discord.Status.online, activity = activity)
+    await client.change_presence(status=discord.Status.online, activity=activity)
     print(f"We have logged in as {client.user}")
 
 
@@ -28,7 +30,7 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    desc = f"На сервере у {message.author}"
+    desc = f"На сервере у {message.author.display_name}"
 
     # справка
     if message.content == '!h' or message.content == '!help':
@@ -44,7 +46,7 @@ async def on_message(message):
         await message.channel.send(embed=emb)
 
     # Вывод кодов запуска ракет
-    if message.content == '!к' or message.content == '!k':
+    if message.content == '!к' or message.content == '!c':
         # Получим коды запуска ракет
         codes = get_nuka_codes()
         if len(codes) == 3:
@@ -57,50 +59,82 @@ async def on_message(message):
             emb = discord.Embed(title="Получить коды запуска ракет не удалось!")
         await message.channel.send(embed=emb)
 
-    # События
-    # Матка
+    # Game events
+    # Scorched Earth
     if message.content.startswith('!м'):
-        emb = discord.Embed(title='СОБЫТИЕ ГОРЕЛАЯ ЗЕМЛЯ',description=desc, color=0x7289da)
+        emb = discord.Embed(title='СОБЫТИЕ ГОРЕЛАЯ ЗЕМЛЯ', description=desc, color=0x7289da)
         emb.set_thumbnail(url="https://bestuzheff.github.io/images/f76_Scorched_quest.webp")
         note = get_note(message.content)
         if note != '':
             emb.add_field(name='Примечание', value=note, inline=False)
         await message.channel.send(embed=emb)
 
-    # Эрл
+    # A Colossal Problem
     if message.content.startswith('!э'):
-        emb = discord.Embed(title='СОБЫТИЕ КОЛОССАЛЬНАЯ ПРОБЛЕМА',description=desc, color=0x7289da)
+        emb = discord.Embed(title='СОБЫТИЕ КОЛОССАЛЬНАЯ ПРОБЛЕМА', description=desc, color=0x7289da)
         emb.set_thumbnail(url="https://bestuzheff.github.io/images/f76_wst_colossus.webp")
         note = get_note(message.content)
         if note != '':
             emb.add_field(name='Примечание', value=note, inline=False)
         await message.channel.send(embed=emb)
 
-    # Баран
+    # Encryptid
     if message.content.startswith('!б'):
-        emb = discord.Embed(title='СОБЫТИЕ КРИПТИДОГРАФИЯ',description=desc, color=0x7289da)
+        emb = discord.Embed(title='СОБЫТИЕ КРИПТИДОГРАФИЯ', description=desc, color=0x7289da)
         emb.set_thumbnail(url="https://bestuzheff.github.io/images/f76_cryptide.png")
         note = get_note(message.content)
         if note != '':
             emb.add_field(name='Примечание', value=note, inline=False)
         await message.channel.send(embed=emb)
 
+    # Karma
+    # Add karma
+    if message.content.startswith('+karma') or message.content.startswith('+k'):
+        user_id = get_user_id(message.content)
+        user_name = client.get_user(int(user_id)).display_name
+        pass
+
+
+    # Remove karma
+    if message.content.startswith('-karma') or message.content.startswith('-k'):
+        user_id = get_user_id(message.content)
+        user_name = client.get_user(int(user_id))
+        pass
+
+    # Check karma
+    if message.content.startswith('!karma') or message.content.startswith('!k'):
+        user_id = get_user_id(message.content)
+        user_name = client.get_user(int(user_id)).display_name        
+        pass
+
 
 def get_nuka_codes():
     codes = []
-    response = requests.get("https://nukacrypt.com/", timeout=15)
+
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:55.0) Gecko/20100101 Firefox/55.0', }
+    response = requests.get("https://nukacrypt.com", timeout=15, headers=headers)
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, "html.parser")
         nuclearcodess = soup.find("div", {"id": "nuclearcodess"})
         quotes = nuclearcodess.find_all("td")
         for nuca_code in quotes:
-            nuca_сode_text = nuca_code.text
-            if nuca_сode_text.isdigit():
-                codes.append(nuca_сode_text)
+            nuca_code_text = nuca_code.text
+            if nuca_code_text.isdigit():
+                codes.append(nuca_code_text)
     return codes
-    
+
+
 def get_note(message):
     note = message[2:].strip()
     return note
+
+
+def get_user_id(message):
+    user_id = ''
+    start_id_place = message.find("<")
+    end_id_place = message.find(">")
+    if start_id_place > 0 and end_id_place > 0:
+        user_id = message[start_id_place+2:end_id_place:]
+    return user_id
 
 client.run(bot_token)
