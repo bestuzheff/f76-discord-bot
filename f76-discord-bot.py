@@ -35,7 +35,7 @@ async def on_message(message):
     # справка
     if message.content == '!с' or message.content == '!help':
         emb = discord.Embed(title='СПРАВКА', color=discord.Colour.dark_orange())
-        emb.set_thumbnail(url="http://unit-soft.ru/f76_images/f76_nuca_cola.webp")        
+        emb.set_thumbnail(url="https://bestuzheff.github.io/images/f76_nuca_cola.webp")        
         emb.add_field(name='Команды бота:', value="""
         **!с** - справка по боту 
         **!к** - коды запуска ракет 
@@ -52,7 +52,7 @@ async def on_message(message):
         codes = get_nuka_codes()
         if len(codes) == 3:
             emb = discord.Embed(title='КОДЫ ЗАПУСКА РАКЕТ', color=discord.Colour.dark_orange())
-            emb.set_thumbnail(url="http://unit-soft.ru/f76_images/f76_bomb.webp")
+            emb.set_thumbnail(url="https://bestuzheff.github.io/images/f76_bomb.webp")
             emb.add_field(name='Альфа', value=codes[0], inline=True)
             emb.add_field(name='Браво', value=codes[1], inline=True)
             emb.add_field(name='Чарли', value=codes[2], inline=True)
@@ -64,7 +64,7 @@ async def on_message(message):
     # Scorched Earth
     if message.content.startswith('!м'):
         emb = discord.Embed(title='СОБЫТИЕ ГОРЕЛАЯ ЗЕМЛЯ', description=desc, color=0x7289da)
-        emb.set_thumbnail(url="http://unit-soft.ru/f76_images/f76_Scorched_quest.webp")
+        emb.set_thumbnail(url="https://bestuzheff.github.io/images/f76_Scorched_quest.webp")
         note = get_note(message.content)
         if note != '':
             emb.add_field(name='Примечание', value=note, inline=False)
@@ -73,7 +73,7 @@ async def on_message(message):
     # A Colossal Problem
     if message.content.startswith('!э'):
         emb = discord.Embed(title='СОБЫТИЕ КОЛОССАЛЬНАЯ ПРОБЛЕМА', description=desc, color=0x7289da)
-        emb.set_thumbnail(url="http://unit-soft.ru/f76_images/f76_wst_colossus.webp")
+        emb.set_thumbnail(url="https://bestuzheff.github.io/images/f76_wst_colossus.webp")
         note = get_note(message.content)
         if note != '':
             emb.add_field(name='Примечание', value=note, inline=False)
@@ -82,7 +82,7 @@ async def on_message(message):
     # Encryptid
     if message.content.startswith('!б'):
         emb = discord.Embed(title='СОБЫТИЕ КРИПТИДОГРАФИЯ', description=desc, color=0x7289da)
-        emb.set_thumbnail(url="http://unit-soft.ru/f76_images/f76_encryptid.webp")
+        emb.set_thumbnail(url="https://bestuzheff.github.io/images/f76_encryptid.webp")
         note = get_note(message.content)
         if note != '':
             emb.add_field(name='Примечание', value=note, inline=False)
@@ -91,31 +91,11 @@ async def on_message(message):
     # Seismic Activity
     if message.content.startswith('!т'):
         emb = discord.Embed(title='СОБЫТИЕ СЕЙСМИЧЕСКАЯ АКТИВНОСТЬ', description=desc, color=0x7289da)
-        emb.set_thumbnail(url="http://unit-soft.ru/f76_images/f76_seismic_activity.webp")
+        emb.set_thumbnail(url="https://bestuzheff.github.io/images/f76_seismic_activity.webp")
         note = get_note(message.content)
         if note != '':
             emb.add_field(name='Примечание', value=note, inline=False)
         await message.channel.send(embed=emb)
-
-    # Karma
-    # Add karma
-    if message.content.startswith('+karma') or message.content.startswith('+k'):
-        # user_id = get_user_id(message.content)
-        # user_name = client.get_user(int(user_id)).display_name
-        pass
-
-
-    # Remove karma
-    if message.content.startswith('-karma') or message.content.startswith('-k'):
-        # user_id = get_user_id(message.content)
-        # user_name = client.get_user(int(user_id))
-        pass
-
-    # Check karma
-    if message.content.startswith('!karma') or message.content.startswith('!k'):
-        # user_id = get_user_id(message.content)
-        # user_name = client.get_user(int(user_id)).display_name        
-        pass
 
 
 def get_nuka_codes():
