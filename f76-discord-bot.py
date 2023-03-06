@@ -101,15 +101,14 @@ async def on_message(message):
 def get_nuka_codes():
     codes = []
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:55.0) Gecko/20100101 Firefox/55.0', }
-    response = requests.get("https://nukacrypt.com", timeout=15, headers=headers)
+    response = requests.get("https://www.falloutbuilds.com/fo76/nuke-codes/", timeout=15, headers=headers)
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, "html.parser")
-        nuclearcodess = soup.find("div", {"id": "nuclearcodess"})
-        quotes = nuclearcodess.find_all("td")
+        nuclearcodess = soup.find("div", {"class": "d-flex flex-column flex-lg-row justify-content-lg-around text-center h3"})
+        quotes = nuclearcodess.find_all("div")
         for nuca_code in quotes:
-            nuca_code_text = nuca_code.text
-            if nuca_code_text.isdigit():
-                codes.append(nuca_code_text)
+            nuca_code_text = nuca_code.find("br").next
+            codes.append( nuca_code_text.replace(' ', ''))
     return codes
 
 
